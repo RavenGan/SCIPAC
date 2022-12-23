@@ -1,0 +1,28 @@
+Package: SCIPAC
+Type: Package
+Title: Single Cell Identifier of Phenotype-Associated Cells
+Version: 0.1.0
+Authors@R: c(person(given = "Dailin", family = "Gan", role = c("aut", "cre"), email = "dgan@nd.edu", comment = c(ORCID = "0000-0003-0535-1259")), person(given = "Jun", family = "Li", role = "aut"))
+Description: Identify cell types in single-cell data that are associated with a given phenotype.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.1
+Imports:
+    dplyr,
+    data.table,
+    Seurat,
+    parallel,
+    stats,
+    glmnet,
+    ordinalNet,
+    MASS
+Depends:
+    R (>= 2.10)
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    ggplot2,
+    uwot
+VignetteBuilder: knitr
