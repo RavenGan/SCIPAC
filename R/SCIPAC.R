@@ -275,7 +275,7 @@ obtain.ct.Lambda <- function(Lambda.res, K.means.res, CI.alpha = 0.05){
 #' @export
 
 SCIPAC <- function(bulk.dat, y, family, ct.res, ela.net.alpha = 0.4,
-                   bt.size = 50, numCores = 7, CI.alpha = 0.05){
+                   bt.size = 50, numCores = 7, CI.alpha = 0.05, nfold = 10){
   Lambda.res <- classifier.Lambda(bulk.dat, y, family, ct.res, ela.net.alpha = ela.net.alpha, bt.size = bt.size, numCores = numCores)
   ct.assign <- obtain.ct.Lambda(Lambda.res, ct.res, CI.alpha = CI.alpha)
   return(ct.assign)
