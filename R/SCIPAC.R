@@ -15,11 +15,12 @@
 #' (3). centers, cluster centroids. Rows are for PCs and columns are for clusters.
 #' Each cluster centroid is calculated by taking the average value of all the cells in the cluster.
 #' @param ela.net.alpha the parameter alpha used for the elastic net. 0 for ridge and 1 for lasso. The default is 0.4.
+#' @param nfold The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.
 #' @return a data frame with two columns. One column named ct.assignment is the cluster assignment, and the other one named
 #' Lambda is the calculated Lambda for each cell. Cells from the same cluster have the same value of Lambda.
 #' @importFrom dplyr %>%
 
-classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alpha = 0.4){
+classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alpha, nfold){
   K.means.cent <- K.means.res$centers
   K <- K.means.res$k
   ct.assign <- K.means.res$ct.assignment
@@ -55,7 +56,8 @@ classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alp
 
     if(family == "binomial"){
       # Apply logistic regression
-      cv.ela.net <- glmnet::cv.glmnet(as.matrix(new.sample), new.y, family = "binomial", alpha = ela.net.alpha)
+      cv.ela.net <- glmnet::cv.glmnet(as.matrix(new.sample), new.y, family = "binomial", alpha = ela.net.alpha,
+                                      nfolds = nfold)
       logit.mol.ela.net <- glmnet::glmnet(new.sample, new.y, family = "binomial",
                                   alpha = ela.net.alpha, lambda = cv.ela.net$lambda.min, standardize = TRUE)
       beta <- stats::coef(logit.mol.ela.net)[-1] %>% c()
@@ -89,7 +91,8 @@ classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alp
     new.sample.ave <- colSums(new.sample)/nrow(new.sample)
 
     # Apply linear regression with elastic net
-    cv.ela.net <- glmnet::cv.glmnet(as.matrix(new.sample), new.y, family = "gaussian", alpha = ela.net.alpha)
+    cv.ela.net <- glmnet::cv.glmnet(as.matrix(new.sample), new.y, family = "gaussian", alpha = ela.net.alpha,
+                                    nfolds = nfold)
     linear.mol.ela.net <- glmnet::glmnet(new.sample, new.y, family = "gaussian", alpha = ela.net.alpha,
                                  lambda = cv.ela.net$lambda.min, standardize = TRUE)
     beta <- stats::coef(linear.mol.ela.net)[-1] %>% c()
@@ -118,7 +121,7 @@ classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alp
     # Apply cox regression
     cv.ela.net <- glmnet::cv.glmnet(re.sample.dat, new.y,
                             family = "cox", type.measure = "C",
-                            alpha = ela.net.alpha)
+                            alpha = ela.net.alpha, nfolds = nfold)
     cox.ela.net <- glmnet::glmnet(re.sample.dat, new.y, family = "cox",
                           alpha = ela.net.alpha, lambda = cv.ela.net$lambda.min, standardize = TRUE)
     beta <- stats::coef(cox.ela.net) %>% as.matrix()
@@ -158,14 +161,17 @@ classifier.Lambda.core <- function(bulk.dat, y, family, K.means.res, ela.net.alp
 #' Each cluster centroid is calculated by taking the average value of all the cells in the cluster.
 #' @param ela.net.alpha the parameter alpha used for the elastic net. 0 for ridge and 1 for lasso. The default is 0.4.
 #' @param bt.size the number of bootstrap samples. The default is 50.
+#' @param nfold The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.
 #' @param numCores the number of cores used for parallel computing. The default is 7.
 #' @return A data frame whose rows are cells and columns are bootstrap samples.
 #' @importFrom dplyr %>%
 
-classifier.Lambda <- function(bulk.dat, y, family, K.means.res, ela.net.alpha = 0.4, bt.size = 50, numCores = 7){
+classifier.Lambda <- function(bulk.dat, y, family, K.means.res, ela.net.alpha, 
+                              bt.size, nfold = nfold, numCores){
   fx <- function(seed){
     set.seed(seed)
-    return(classifier.Lambda.core(bulk.dat, y, family, K.means.res, ela.net.alpha = ela.net.alpha))
+    return(classifier.Lambda.core(bulk.dat, y, family, K.means.res, 
+                                  ela.net.alpha = ela.net.alpha, nfold = nfold))
   }
   K <- K.means.res$k
   ct.assign <- K.means.res$ct.assignment
@@ -262,6 +268,7 @@ obtain.ct.Lambda <- function(Lambda.res, K.means.res, CI.alpha = 0.05){
 #' @param bt.size the number of bootstrap samples. The default is \code{bt.size = 50}.
 #' @param numCores the number of cores used for parallel computing. The default is \code{numCores = 7}.
 #' @param CI.alpha significance level used to decide significantly positive/negative results. The default is \code{CI.alpha = 0.05}.
+#' @param nfold The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.
 #' @return A data frame with six columns. Row names are cells. The six columns are
 #' \itemize{
 #' \item (1). \code{cluster_assignment}: the cluster assignment of each cell;
@@ -276,7 +283,8 @@ obtain.ct.Lambda <- function(Lambda.res, K.means.res, CI.alpha = 0.05){
 
 SCIPAC <- function(bulk.dat, y, family, ct.res, ela.net.alpha = 0.4,
                    bt.size = 50, numCores = 7, CI.alpha = 0.05, nfold = 10){
-  Lambda.res <- classifier.Lambda(bulk.dat, y, family, ct.res, ela.net.alpha = ela.net.alpha, bt.size = bt.size, numCores = numCores)
+  Lambda.res <- classifier.Lambda(bulk.dat, y, family, ct.res, ela.net.alpha = ela.net.alpha, 
+                                  bt.size = bt.size, nfold = nfold, numCores = numCores)
   ct.assign <- obtain.ct.Lambda(Lambda.res, ct.res, CI.alpha = CI.alpha)
   return(ct.assign)
 }

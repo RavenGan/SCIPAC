@@ -12,7 +12,8 @@ SCIPAC(
   ela.net.alpha = 0.4,
   bt.size = 50,
   numCores = 7,
-  CI.alpha = 0.05
+  CI.alpha = 0.05,
+  nfold = 10
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ This renaming is required for the algorithm used.
 \item{numCores}{the number of cores used for parallel computing. The default is \code{numCores = 7}.}
 
 \item{CI.alpha}{significance level used to decide significantly positive/negative results. The default is \code{CI.alpha = 0.05}.}
+
+\item{nfold}{The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.}
 }
 \value{
 A data frame with six columns. Row names are cells. The six columns are

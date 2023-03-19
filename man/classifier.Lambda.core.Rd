@@ -4,7 +4,7 @@
 \alias{classifier.Lambda.core}
 \title{The core function to obtain Lambda using different regression methods}
 \usage{
-classifier.Lambda.core(bulk.dat, y, family, K.means.res, ela.net.alpha = 0.4)
+classifier.Lambda.core(bulk.dat, y, family, K.means.res, ela.net.alpha, nfold)
 }
 \arguments{
 \item{bulk.dat}{a dimension-reduced bulk data. Rows stand for samples and columns stand for PCs.}
@@ -26,6 +26,8 @@ This renaming is required for the algorithm used.}
 Each cluster centroid is calculated by taking the average value of all the cells in the cluster.}
 
 \item{ela.net.alpha}{the parameter alpha used for the elastic net. 0 for ridge and 1 for lasso. The default is 0.4.}
+
+\item{nfold}{The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.}
 }
 \value{
 a data frame with two columns. One column named ct.assignment is the cluster assignment, and the other one named

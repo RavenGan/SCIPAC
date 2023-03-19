@@ -9,9 +9,10 @@ classifier.Lambda(
   y,
   family,
   K.means.res,
-  ela.net.alpha = 0.4,
-  bt.size = 50,
-  numCores = 7
+  ela.net.alpha,
+  bt.size,
+  nfold = nfold,
+  numCores
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ Each cluster centroid is calculated by taking the average value of all the cells
 \item{ela.net.alpha}{the parameter alpha used for the elastic net. 0 for ridge and 1 for lasso. The default is 0.4.}
 
 \item{bt.size}{the number of bootstrap samples. The default is 50.}
+
+\item{nfold}{The number of folds used in cross-validation for regression models. The default is \code{nfold = 10}.}
 
 \item{numCores}{the number of cores used for parallel computing. The default is 7.}
 }

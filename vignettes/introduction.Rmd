@@ -193,7 +193,7 @@ After obtaining all the necessary input, we can finally use `SCIPAC` to identify
 SCIPAC.res <- SCIPAC(bulk.dat = bulk.dat.dim.redu, y = y, 
                      family = "binomial", ct.res = ct.res, 
                      ela.net.alpha = 0.4, bt.size = 50, 
-                     numCores = 7, CI.alpha = 0.05)
+                     numCores = 7, CI.alpha = 0.05, nfold = 10)
 ```
 
 In the `SCIPAC` function, we set `family = "binomial"` since we use binary input. For other parameters `ela.net.alpha`, `bt.size`, `numCores`, and `CI.alpha`, we use the default values in `SCIPAC`. We next have a look at the output results.
@@ -408,7 +408,7 @@ Let's run SCIPAC for ordinal data.
 SCIPAC.res.ordinal <- SCIPAC(bulk.dat = bulk.dat.ordinal, y = y,
                              family = "cumulative", ct.res = ct.res.ordinal,
                              ela.net.alpha = 0.4, bt.size = 50,
-                             numCores = 7, CI.alpha = 0.05)
+                             numCores = 7, CI.alpha = 0.05, nfold = 10)
 ```
 
 We set `family = "cumulative"` for ordinal input `y` and use the default values for other parameters.
@@ -641,7 +641,7 @@ After all the preparation, we can finally run SCIPAC.
 SCIPAC.res.LUAD <- SCIPAC(bulk.dat = LUAD.bulk.dat.sub, y = y,
                              family = "cox", ct.res = LUAD.ct.res,
                              ela.net.alpha = 0.4, bt.size = 50,
-                             numCores = 7, CI.alpha = 0.05)
+                             numCores = 7, CI.alpha = 0.05, nfold = 10)
 ```
 
 We set `family = "cox"` for survival input `y` and use the default values for other parameters.
