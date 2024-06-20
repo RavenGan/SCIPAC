@@ -11,7 +11,7 @@ obtain.preprocessed.data <- function(exprs.data, hvg = 1000){
   exprs.data <- Seurat::NormalizeData(exprs.data, normalization.method = "LogNormalize", scale.factor = 10000)
   exprs.data <- Seurat::FindVariableFeatures(exprs.data, selection.method = "vst", nfeatures = hvg)
 
-  exprs.data.norm <- exprs.data[["RNA"]]@data
+  exprs.data.norm <- exprs.data[["RNA"]]$data
   exprs.data.variable.genes <- Seurat::VariableFeatures(exprs.data)
 
   processed.data <- exprs.data.norm[exprs.data.variable.genes, ] %>%
