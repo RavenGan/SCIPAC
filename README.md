@@ -15,6 +15,8 @@ Numerous algorithms have been proposed to identify cell types in single-cell RNA
 ## Manual
 Please see [http://RavenGan.github.io/SCIPAC/vignettes/introduction.html](http://RavenGan.github.io/SCIPAC/vignettes/introduction.html) for details. In the introduction, we also include how to use TCGA databases as the source of bulk RNA-seq data for the application of SCIPAC. In the R terminal, users can also use `?SCIPAC` to access the help documents.
 
+The code to generate the simulated data from three schemes is provided in the repository [SCIPAC_simulation](https://github.com/RavenGan/SCIPAC_simulation).
+
 ## Examples
 In the [SCIPAC tutorial](http://RavenGan.github.io/SCIPAC/vignettes/introduction.html), we use multiple examples to show the function and performance of SCIPAC. Example datasets are also included in SCIPAC package.
 
